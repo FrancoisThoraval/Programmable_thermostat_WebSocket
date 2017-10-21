@@ -6,12 +6,15 @@
 package com.LuccheseThoraval.Java.Websocket;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
+import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.json.spi.JsonProvider;
 import javax.websocket.Session;
 
@@ -32,20 +35,25 @@ public class ThermostatSessionHandler {
         sessions.remove(session);
     }
     
-    public void runProgram(){
-        JsonObject addMessage = createAddMessage();
-        System.out.println(addMessage);
-        sendToAllConnectedSessions(addMessage);
+    public void run_program(String message){
+        sendToAllConnectedSessions(createMessage(message));
     }
     
-    private JsonObject createAddMessage(){
-        JsonProvider provider = JsonProvider.provider();
-        JsonObject addMessage = provider.createObjectBuilder()
-                .add("action", "run_program")
-                .add("description", "test")
-                .build();
-        
-        return addMessage;
+    public void fan_switch_auto(String message){
+        sendToAllConnectedSessions(createMessage(message));
+    }
+    
+    private JsonObject createMessage(String message){
+        try(JsonReader reader = Json.createReader(new StringReader(message))){
+            JsonObject jsonMessage = reader.readObject();
+            JsonProvider provider = JsonProvider.provider();
+            JsonObject addMessage = provider.createObjectBuilder()
+                    .add("action", jsonMessage.getString("action"))
+                    .add("description", jsonMessage.getString("description"))
+                    .build();
+
+            return addMessage;
+        }
     }
     
     private void sendToAllConnectedSessions(JsonObject message){

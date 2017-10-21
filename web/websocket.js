@@ -12,7 +12,7 @@ function onMessage(event){
     
     switch(thermostat.action){
         //Tout les inputs de Programmable_thermostat_input.java
-        case "fan_switch_auto": fan_switch_auto();
+        case "fan_switch_auto": fan_switch_auto(thermostat.description);
             break;
         case "fan_switch_on" : fan_switch_on();
             break;
@@ -20,7 +20,7 @@ function onMessage(event){
             break;
         case "hold_temp" : hold_temp();
             break;
-        case "run_program": run_program();
+        case "run_program": run_program(thermostat.description);
             break;
         case "season_switch_cool" : season_switch_cool();
             break;
@@ -59,22 +59,34 @@ function onMessage(event){
     }
 }
 
-function run_program(){
-    console.log("it's working !");
+function run_program(description){
+    console.log("Description: " + description);
 }
 
-function runProgram(event){
-    var run = {
-        action : "run_program",
-        description: "program should run"
-    };
-    socket.send(JSON.stringify(run));
+function fan_switch_auto(description){
+    console.log("Description: " + description);
 }
 
 function init(){
     console.log("app loaded");
     
-    $('#run').on('click',runProgram);
+    //Clic sur le bouton "run program"
+    $('#run_program').on('click',function(event){
+        var message = {
+            action : "run_program",
+            description: "program should run"
+        };
+        socket.send(JSON.stringify(message));
+    });
+    
+    $('#fan_switch_auto').on('change',function(event){
+        console.log("clicked on fan switch");
+        var message = {
+            action : "fan_switch_auto",
+            description : "Switch fan on automatic mode"
+        };
+        socket.send(JSON.stringify(message));
+    });
 }
 
 

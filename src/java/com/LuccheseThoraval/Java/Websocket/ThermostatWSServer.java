@@ -51,12 +51,18 @@ public class ThermostatWSServer {
     public void messageHandler(String message, Session session){
         try(JsonReader reader = Json.createReader(new StringReader(message))){
             JsonObject jsonMessage = reader.readObject();
-            if("run_program".equals(jsonMessage.getString("action"))){
-                //run the run program function
+            switch(jsonMessage.getString("action")){
+                //TODO complete this when we actually know how to use Thermostat's functions !
+                case "run_program": {
+                    //run the Barbier's program function
                 
-                System.out.println("i run the program");
-                sessionHandler.runProgram();
-            } else {
+                    System.out.println("run_program executed");
+                    sessionHandler.run_program(message);
+                }break;
+                case "fan_switch_auto":{
+                    System.out.println("fan_switch_auto executed");
+                    sessionHandler.fan_switch_auto(message);
+                }break;
             }
         }
     }

@@ -1,2 +1,0 @@
-com.FranckBarbier.Java._Programmable_thermostat_MODEL._Programmable_thermostat.Program
-com.FranckBarbier.Java._Programmable_thermostat_MODEL._Programmable_thermostat.Programmable_thermostat
