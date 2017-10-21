@@ -6,6 +6,7 @@
 package com.LuccheseThoraval.Java.Websocket;
 
 import com.FranckBarbier.Java._Programmable_thermostat_MODEL._Programmable_thermostat.Programmable_thermostat;
+import com.FranckBarbier.Java._Temperature.*;   
 import java.io.StringReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +29,8 @@ import javax.websocket.server.ServerEndpoint;
 @ApplicationScoped
 @ServerEndpoint("/actions")
 public class ThermostatWSServer {
+    //private Temperature _temp = new Temperature(20.F,Temperature.Celsius);
+    //private Programmable_thermostat _thermostat = new Programmable_thermostat(_temp);
     
     @Inject
     private ThermostatSessionHandler sessionHandler;
