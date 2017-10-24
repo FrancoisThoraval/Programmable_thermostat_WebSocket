@@ -1,6 +1,6 @@
 "use strict";
 
-window.onload = init;
+window.onload = main;
 
 var socket = new WebSocket("ws://localhost:8080/Programmable_thermostat_WebSocket/actions");
 socket.onmessage = onMessage;
@@ -16,7 +16,7 @@ function onMessage(event){
             break;
         case "fan_switch_on" : fan_switch_on();
             break;
-        case "f_c" : f_c();
+        case "f_c" : f_c(thermostat.unit,thermostat.temp,thermostat.description);
             break;
         case "hold_temp" : hold_temp();
             break;
@@ -67,7 +67,13 @@ function fan_switch_auto(description){
     console.log("Description: " + description);
 }
 
-function init(){
+function f_c(unit,temp,description){
+    $('#actualTemp').html("Actual temp: " + temp + "°" + unit);
+    console.log("Temp: " + temp + "°" + unit);
+    console.log("Description: " + description);
+}
+
+function main(){
     console.log("app loaded");
     
     //Clic sur le bouton "run program"
@@ -85,6 +91,30 @@ function init(){
             action : "fan_switch_auto",
             description : "Switch fan on automatic mode"
         };
+        socket.send(JSON.stringify(message));
+    });
+    
+    $('#tempOptions').on('click',function(event){
+        if($('#optionC').is(":checked")){
+            $('#optionF').prop("checked", false);
+            console.log("checked temp in C");
+            var message = {
+                action : "f_c",
+                unit : "C",
+                description : "Change unit in Celsius"
+            };
+        }else if ($('#optionF').is(":checked")){
+            $('#optionC').prop("checked", false);
+            console.log("checked temp in F");
+            var message = {
+                action : "f_c",
+                unit : "F",
+                description : "Change unit in Fahrenheit"
+            };
+        }else if ($('#optionHoldTemp').is(":checked")){
+            console.log("checked hold temp");
+        }
+        
         socket.send(JSON.stringify(message));
     });
 }

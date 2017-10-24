@@ -46,16 +46,16 @@
                 <h5> Friday 06/10/2017 </h5>
             </div>
             <div class="card-block">
-                <h1 class="card-title">Actual Temp: 21 °C</h1>
-                <h5 class="card-title">Next Temp: 23 °C</h5>
+                <h1 id="actualTemp" class="card-title">Actual Temp: 21 °C</h1>
+                <h5 id="nextTemp" class="card-title">Next Temp: 23 °C</h5>
                 
                 <!-- Temperature Display-->
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-primary active">
-                        <input type="radio" name="options" id="option1" autocomplete="off" checked> °C
+                <div id="tempOptions" class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary">
+                        <input type="radio" name="options" id="optionC" autocomplete="off"> °C
                     </label>
                     <label class="btn btn-primary">
-                        <input type="radio" name="options" id="option2" autocomplete="off"> °F
+                        <input type="radio" name="options" id="optionF" autocomplete="off"> °F
                     </label>
                     <label class="btn btn-outline-info">
                         <input type="checkbox" class="btn btn-primary">Hold Temp
@@ -75,8 +75,8 @@
                 </div>
                 <br>
                 <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-outline-primary active">
-                        <input type="radio" name="options" id="option1" autocomplete="off" checked> Cool
+                    <label class="btn btn-outline-primary">
+                        <input type="radio" name="options" id="option1" autocomplete="off"> Cool
                     </label>
                     <label class="btn btn-outline-danger">
                         <input type="radio" name="options" id="option2" autocomplete="off"> Heat
@@ -114,7 +114,7 @@
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" crossorigin="anonymous"></script>-->
     <script src="websocket.js"></script>
   </body>
 </html>

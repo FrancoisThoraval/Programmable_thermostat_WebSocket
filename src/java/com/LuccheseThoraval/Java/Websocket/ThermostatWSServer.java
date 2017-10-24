@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.json.spi.JsonProvider;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -29,8 +30,34 @@ import javax.websocket.server.ServerEndpoint;
 @ApplicationScoped
 @ServerEndpoint("/actions")
 public class ThermostatWSServer {
-    //private Temperature _temp = new Temperature(20.F,Temperature.Celsius);
-    //private Programmable_thermostat _thermostat = new Programmable_thermostat(_temp);
+    private static Temperature _initTemp;
+    private Temperature _temp;
+    private Programmable_thermostat _thermostat;
+    
+    static{
+        try{
+            _initTemp = new Temperature(21.F,Temperature.Celsius,1.F); //value,unit,step
+            
+        }catch(Exception e){
+            System.err.println(e);
+        }
+        
+    }
+    
+    private void initThermostat(){
+        _temp = (Temperature) _initTemp.clone();
+        try{
+            _thermostat = new Programmable_thermostat(_temp);
+            System.out.println("Thermostat initialized !");
+            //_thermostat.temp_up();
+            
+            //System.out.println(_thermostat.getAmbientTemperature().asCelsius() + "°C");
+        }catch(Exception e){
+            System.err.println(e);
+        }
+        
+        
+    }
     
     @Inject
     private ThermostatSessionHandler sessionHandler;
@@ -38,6 +65,7 @@ public class ThermostatWSServer {
     @OnOpen
     public void onOpen(Session session){
         sessionHandler.addSession(session);
+        initThermostat();
     }
     
     @OnClose
@@ -62,10 +90,36 @@ public class ThermostatWSServer {
                     System.out.println("run_program executed");
                     sessionHandler.run_program(message);
                 }break;
+                
                 case "fan_switch_auto":{
                     System.out.println("fan_switch_auto executed");
                     sessionHandler.fan_switch_auto(message);
                 }break;
+                
+                case "f_c":{
+                    System.out.println("f_c executed");
+                    JsonProvider provider = JsonProvider.provider();
+                    JsonObject updateMessage;
+                    System.out.println(jsonMessage.getString("unit"));
+                    if(jsonMessage.getString("unit").equals("C")){
+                        updateMessage = provider.createObjectBuilder()
+                            .add("action", "f_c")
+                            .add("unit", jsonMessage.getString("unit"))
+                            .add("temp", _thermostat.getAmbientTemperature().asCelsius())
+                            .add("description", jsonMessage.getString("description"))
+                            .build();
+                    }else{
+                        updateMessage = provider.createObjectBuilder()
+                            .add("action", "f_c")
+                            .add("unit", jsonMessage.getString("unit"))
+                            .add("temp", _thermostat.getAmbientTemperature().asFahrenheit())
+                            .add("description", jsonMessage.getString("description"))
+                            .build();
+                    }
+                    
+
+                    sessionHandler.f_c(updateMessage);
+                }
             }
         }
     }

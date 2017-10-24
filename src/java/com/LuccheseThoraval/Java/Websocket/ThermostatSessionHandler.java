@@ -43,6 +43,10 @@ public class ThermostatSessionHandler {
         sendToAllConnectedSessions(createMessage(message));
     }
     
+    public void f_c(JsonObject message){
+        sendToAllConnectedSessions(message);
+    }
+    
     private JsonObject createMessage(String message){
         try(JsonReader reader = Json.createReader(new StringReader(message))){
             JsonObject jsonMessage = reader.readObject();

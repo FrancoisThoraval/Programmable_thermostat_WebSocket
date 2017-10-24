@@ -734,4 +734,10 @@ public class Programmable_thermostat extends AbstractTimer_monitor implements Pr
     public String verbose() {
         return _Programmable_thermostat_state_machine.verbose();
     }
+    
+    //--------------- Thoraval/Lucchese
+    
+    public Temperature getAmbientTemperature(){
+        return this._ambient_temperature;
+    }
 }
