@@ -29,6 +29,7 @@ public class ThermostatSessionHandler {
     public void addSession(Session session){
         System.out.println("addSession");
         sessions.add(session);
+        sendToAllConnectedSessions(createMessage("{\"action\":\"connexion_created\",\"description\":\"Connexion created\"}"));
     }
     
     public void removeSession (Session session){
@@ -47,6 +48,10 @@ public class ThermostatSessionHandler {
         sendToAllConnectedSessions(message);
     }
     
+    public void sendMessage(String message){
+        sendToAllConnectedSessions(createMessage(message));
+    }
+    
     private JsonObject createMessage(String message){
         try(JsonReader reader = Json.createReader(new StringReader(message))){
             JsonObject jsonMessage = reader.readObject();
@@ -55,14 +60,12 @@ public class ThermostatSessionHandler {
                     .add("action", jsonMessage.getString("action"))
                     .add("description", jsonMessage.getString("description"))
                     .build();
-
             return addMessage;
         }
     }
     
     private void sendToAllConnectedSessions(JsonObject message){
         for (Session session : sessions){
-            //System.out.println(session + " " + message);
             sendToSession(session, message);
         }
     }
@@ -70,7 +73,6 @@ public class ThermostatSessionHandler {
     private void sendToSession(Session session, JsonObject message){
         try{
             session.getBasicRemote().sendText(message.toString());
-            System.out.println(message.toString());
         } catch(IOException ex){
             System.out.println("error ?");
             sessions.remove(session);

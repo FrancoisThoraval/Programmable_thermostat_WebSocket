@@ -1,9 +1,14 @@
 "use strict";
 
-window.onload = main;
+let Window_loaded = null;
+Object.defineProperty(window, "Window_loaded", {value: new Promise(g => {
+    Window_loaded = main;
+}), enumerable: false, configurable: false, writable: false});
+window.addEventListener('load', Window_loaded);
 
 var socket = new WebSocket("ws://localhost:8080/Programmable_thermostat_WebSocket/actions");
 socket.onmessage = onMessage;
+
 
 function onMessage(event){
     console.log("message received !");
@@ -11,6 +16,10 @@ function onMessage(event){
     
     
     switch(thermostat.action){
+        //Connexion
+        case "connexion_created": console.log(thermostat.description);
+            break;
+        
         //Tout les inputs de Programmable_thermostat_input.java
         case "fan_switch_auto": fan_switch_auto(thermostat.description);
             break;
